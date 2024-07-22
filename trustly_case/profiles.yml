@@ -1,0 +1,16 @@
+trustly_case:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: /Users/abner.rodrigues/Documents/projects/trustly/case-trustly/database/trustly-database.db'
+      schema: 'dev'
+      threads: 8
+    prod: 
+      type: duckdb
+      path: /Users/abner.rodrigues/Documents/projects/trustly/case-trustly/database/trustly-database.db'
+      schema: 'prod'
+      threads: 8
+  target: dev
+
+
