@@ -3,12 +3,12 @@ trustly_case:
   outputs:
     dev:
       type: duckdb
-      path: /Users/abner.rodrigues/Documents/projects/trustly/case-trustly/database/trustly-database.db'
+      path: /Users/abner.rodrigues/Documents/projects/trustly/case-trustly/database/database.db
       schema: 'dev'
       threads: 8
     prod: 
       type: duckdb
-      path: /Users/abner.rodrigues/Documents/projects/trustly/case-trustly/database/trustly-database.db'
+      path: /Users/abner.rodrigues/Documents/projects/trustly/case-trustly/database/database.db
       schema: 'prod'
       threads: 8
   target: dev
