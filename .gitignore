@@ -1,3 +1,10 @@
 /logs
 /database
-/trusly-env
+/trustly-env
+logs/dbt.log
+case-trustly.code-workspace
+.gitignore
+.DS_Store
+.gitignore
+.vscode/settings.json
+dbt-trustly/.user.yml
