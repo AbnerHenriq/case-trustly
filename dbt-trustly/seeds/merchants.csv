@@ -1,0 +1,6 @@
+merchant_id,merchant_name,merchant_type_id,merchant_country,created_at,updated_at,load_created_at
+10,BetKing,1,United States,2023-06-24 00:03:25,2023-06-27 04:43:55,2023-06-27 04:44:55
+20,LuckyBet,1,United Kingdom,2023-12-20 20:46:35,2023-12-24 20:20:19,2023-12-24 20:21:19
+30,WinMaster,2,Germany,2023-08-05 21:37:08,2023-08-07 15:51:47,2023-08-07 15:52:47
+40,FortuneBet,2,France,2023-03-08 17:25:22,2023-03-10 22:13:24,2023-03-10 22:14:24
+50,DemoBet,3,Brazil,2023-01-01 00:00:00,2023-01-01 00:00:00,2023-06-30 00:32:48

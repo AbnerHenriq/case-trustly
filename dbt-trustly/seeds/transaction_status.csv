@@ -1,0 +1,5 @@
+trans_status_id,trans_status_name,trans_status_description,created_at,updated_at,load_created_at
+1,New,New transaction where the user is still using the lightbox,2023-11-05 20:36:38,2023-11-05 20:36:38,2023-11-05 20:37:38
+2,Pending,Transaction is pending and waiting for user or bank action,2023-11-21 08:53:52,2023-11-21 08:53:52,2023-11-21 08:54:52
+3,Completed,Transaction completed and successful,2023-10-21 18:53:37,2023-10-21 18:53:37,2023-10-21 18:54:37
+4,Failed,"Transaction failed, either rejected by the bank or interrupted by the user",2023-05-09 05:18:53,2023-05-09 05:18:53,2023-05-09 05:19:53

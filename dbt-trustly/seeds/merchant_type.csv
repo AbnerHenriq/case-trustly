@@ -1,0 +1,4 @@
+merchant_type_id,merchant_type_name,merchant_type_description,created_at,updated_at,load_created_at
+1,Gaming,Merchants offering gaming services,2023-09-19 00:42:31,2023-09-19 00:42:31,2023-09-19 00:43:31
+2,Casino,Merchants offering casino services,2023-02-25 02:51:41,2023-02-25 02:51:41,2023-02-25 02:52:41
+3,Test Merchant,Merchant used for testing and development purposes,2023-02-16 01:04:12,2023-02-16 01:04:12,2023-02-16 01:05:12
