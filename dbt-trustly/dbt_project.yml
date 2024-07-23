@@ -36,10 +36,16 @@ models:
     example:
       +materialized: view
     staging:
-      +materialized: view
+      +materialized: table
+      schema: staging
     intermediate:
-      +materialized: view
+      +materialized: table
+      schema: intermediate
     marts: 
       +materialized: table
+      schema: marts
 
+seeds:
+  trustly_case:
+      schema: seeds
 

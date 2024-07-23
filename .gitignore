@@ -8,3 +8,6 @@ case-trustly.code-workspace
 .gitignore
 .vscode/settings.json
 dbt-trustly/.user.yml
+logs/dbt.log
+trustly-env/lib/python3.12/site-packages/dbt/__init__.py
+trustly-env/lib/python3.12/site-packages/dbt/__pycache__/__init__.cpython-312.pyc

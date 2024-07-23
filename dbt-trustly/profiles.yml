@@ -2,15 +2,21 @@ trustly_case:
   target: dev
   outputs:
     dev:
-      type: duckdb
-      path: /Users/abner.rodrigues/Documents/projects/trustly/case-trustly/database/database.db
-      schema: 'dev'
+      type: postgres
+      host: localhost
+      port: 5432
+      user: abner_rodrigues
+      pass: abner
+      dbname: trustly
+      schema: public
       threads: 8
     prod: 
-      type: duckdb
-      path: /Users/abner.rodrigues/Documents/projects/trustly/case-trustly/database/database.db
-      schema: 'prod'
+      type: postgres
+      host: localhost
+      port: 5432
+      user: abner_rodrigues
+      pass: abner
+      dbname: trustly
+      schema: public
       threads: 8
   target: dev
-
-
