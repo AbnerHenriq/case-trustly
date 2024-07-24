@@ -23,4 +23,4 @@ The final models are `fct_transactions` and `dim_merchants`.
 
 # Questions
 
-Todos as perguntas podem ser encontradas no arquivo [questions.md](questions.md)
+Todos as perguntas podem ser encontradas no arquivo [questions.md](dbt-trustly/questions/questions.md)
