@@ -1,5 +1,5 @@
 
-##  QUESTION 1) What is the total transaction value and total number of transactions for each merchant?
+##  Question 1) What is the total transaction value and total number of transactions for each merchant?
 ```sql
 select 
 	dm.merchant_name
@@ -11,7 +11,7 @@ left join trustly.public_marts.dim_merchants dm
 group by 1;
 ```
 
-## QUESTION 2) What is the number of completed, failed, and new transactions for each merchant?
+## Question 2) What is the number of completed, failed, and new transactions for each merchant?
 ```sql
 WITH transaction_status_count AS (
     SELECT
@@ -35,7 +35,7 @@ GROUP BY merchant_id, merchant_name
 ORDER BY merchant_id;
 ```
 
-##  QUESTION 3) What is the average transaction value for each transaction type (PayIn and Payout)?
+##  Question 3) What is the average transaction value for each transaction type (PayIn and Payout)?
 ```sql
 SELECT
 SELECT
@@ -45,7 +45,7 @@ FROM trustly.public_marts.fct_transactions
 GROUP BY trans_type_name;
 ```
 
-## QUESTION 4) What is the percentage of failed transactions for each merchant?
+## Question 4) What is the percentage of failed transactions for each merchant?
 ```sql
 WITH transaction_counts AS (
     SELECT
@@ -65,7 +65,7 @@ FROM transaction_counts
 ORDER BY failed_percentage desc
 ```
 
-## QUESTION 5) What is the total transaction value for each user?
+## Question 5) What is the total transaction value for each user?
 ```sql
 SELECT 
     user_id,
@@ -75,7 +75,7 @@ GROUP BY user_id
 ORDER BY total_transaction_value DESC
 ```
 
-## QUESTION 6) How many transactions were initiated and how many were completed?
+## Question 6) How many transactions were initiated and how many were completed?
 ```sql
 SELECT 
     COUNT(*) AS total_transactions,
@@ -84,7 +84,7 @@ SELECT
 FROM public_marts.fct_transactions ft;
 ```
 
-## QUESTION 7) What is the average time between the creation and authorization request of transactions?
+## Question 7) What is the average time between the creation and authorization request of transactions?
 ```sql
 WITH transaction_times AS (
     SELECT
@@ -100,7 +100,7 @@ SELECT
 FROM transaction_times;
 ```
 
-## QUESTION 8) How many transactions did each user perform by transaction type?
+## Question 8) How many transactions did each user perform by transaction type?
 ```sql
 SELECT 
     user_id,
@@ -111,7 +111,7 @@ GROUP BY user_id, trans_type_name
 ORDER BY user_id, transaction_count DESC
 ```
 
-## QUESTION 9) How many sessions were initiated per merchant and what is the average number of steps per session?
+## Question 9) How many sessions were initiated per merchant and what is the average number of steps per session?
 ```sql
 WITH session_steps AS (
     SELECT
@@ -131,7 +131,7 @@ FROM session_steps
 GROUP BY merchant_name;
 ```
 
-## QUESTION 10) What is the most used bank in transactions?
+## Question 10) What is the most used bank in transactions?
 ```sql
 SELECT 
 	  bank_name 
@@ -141,20 +141,20 @@ GROUP BY bank_name
 ORDER BY 2 DESC;
 ```
 
-## QUESTION 11) What is the average time between each step in a session?
+## Question 11) What is the average time between each step in a session?
 ```sql
 SELECT AVG(avg_step_duration_seconds) AS average_time_between_steps
 FROM public_marts.fct_transactions_sessions
 ```
 
-## QUESTION 12) How many sessions were completed (containing the AUTHORIZATION step)?
+## Question 12) How many sessions were completed (containing the AUTHORIZATION step)?
 ```sql
 SELECT COUNT(DISTINCT session_id) AS completed_sessions
 FROM public_marts.fct_transactions_sessions
 WHERE is_session_complete = 1
 ```
 
-## QUESTION 13) What is the most used bank in the LOGIN_ATTEMPT and AUTHORIZATION steps?
+## Question 13) What is the most used bank in the LOGIN_ATTEMPT and AUTHORIZATION steps?
 ```sql
 SELECT 
     bank_name,
@@ -166,7 +166,7 @@ GROUP BY bank_name, step_name
 ORDER BY 3 DESC
 ```
 
-## QUESTION 14) What is the failure rate by bank? Failure are the transactions not completes.
+## Question 14) What is the failure rate by bank? Failure are the transactions not completes.
 ```sql
 WITH transaction_status AS (
     SELECT 
