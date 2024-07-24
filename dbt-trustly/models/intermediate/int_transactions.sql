@@ -11,16 +11,24 @@ SELECT
 	, transactions_type.trans_type_name
 	, transactions_status.trans_status_name 
     , transactions.account_number 
-	, transactions.trans_created_at -- TODO: rename colum
-	, transactions.trans_updated_at -- TODO: rename colum
+	, transactions.trans_created_at 
+	, transactions.trans_updated_at 
 	, transactions.trans_load_created_at 
 	
-	-- session
+	-- sessions
+	, int_sessions.is_session_complete
+	, int_sessions.last_session_updated_at
+	, int_sessions.first_session_created_at
+	, int_sessions.bank_name
+	, EXTRACT(EPOCH FROM (int_sessions.last_session_updated_at - int_sessions.first_session_created_at)) AS session_duration_seconds
+
+	-- session steps
 	, int_sessions.login_attempt_created_datetime
     , int_sessions.authorization_created_datetime
     , int_sessions.select_bank_created_datetime
     , int_sessions.initiated_lightbox_created_datetime
-	
+	, int_sessions.total_steps
+
 FROM {{ ref('stg_transactions') }} as transactions
 LEFT JOIN {{ ref('stg_transactions_status') }} AS transactions_status
 	ON transactions.trans_status_id = transactions_status.trans_status_id 
