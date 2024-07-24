@@ -1,5 +1,6 @@
 
--- QUESTION 1) What is the total transaction value and total number of transactions for each merchant?
+##  QUESTION 1) What is the total transaction value and total number of transactions for each merchant?
+```sql
 select 
 	dm.merchant_name
 	, COUNT(distinct trans_id) as total_transactions
@@ -8,8 +9,10 @@ from trustly.public_marts.fct_transactions ft
 left join trustly.public_marts.dim_merchants dm 
 	on ft.merchant_id = dm.merchant_id 
 group by 1;
+```
 
--- QUESTION 2) What is the number of completed, failed, and new transactions for each merchant?
+## QUESTION 2) What is the number of completed, failed, and new transactions for each merchant?
+```sql
 WITH transaction_status_count AS (
     SELECT
         m.merchant_id,
@@ -30,15 +33,20 @@ SELECT
 FROM transaction_status_count
 GROUP BY merchant_id, merchant_name
 ORDER BY merchant_id;
+```
 
--- QUESTION 3) What is the average transaction value for each transaction type (PayIn and Payout)?
+##  QUESTION 3) What is the average transaction value for each transaction type (PayIn and Payout)?
+```sql
+SELECT
 SELECT
     trans_type_name,
     AVG(trans_amount) AS avg_transaction_value
 FROM trustly.public_marts.fct_transactions
 GROUP BY trans_type_name;
+```
 
--- QUESTION 4) What is the percentage of failed transactions for each merchant?
+## QUESTION 4) What is the percentage of failed transactions for each merchant?
+```sql
 WITH transaction_counts AS (
     SELECT
         m.merchant_id,
@@ -55,23 +63,29 @@ SELECT
     ROUND(CAST((failed_transactions::FLOAT / NULLIF(total_transactions, 0)) * 100 AS NUMERIC), 2) AS failed_percentage
 FROM transaction_counts
 ORDER BY failed_percentage desc
+```
 
--- QUESTION 5) What is the total transaction value for each user?
+## QUESTION 5) What is the total transaction value for each user?
+```sql
 SELECT 
     user_id,
     SUM(trans_amount) AS total_transaction_value
 FROM public_marts.fct_transactions ft 
 GROUP BY user_id
 ORDER BY total_transaction_value DESC
+```
 
--- QUESTION 6) How many transactions were initiated and how many were completed?
+## QUESTION 6) How many transactions were initiated and how many were completed?
+```sql
 SELECT 
     COUNT(*) AS total_transactions,
     SUM(CASE WHEN trans_status_name = 'Completed' THEN 1 ELSE 0 END) AS completed_transactions,
     SUM(CASE WHEN trans_status_name = 'New' THEN 1 ELSE 0 END) AS initiated_transactions
 FROM public_marts.fct_transactions ft;
+```
 
--- QUESTION 7) What is the average time between the creation and authorization request of transactions?
+## QUESTION 7) What is the average time between the creation and authorization request of transactions?
+```sql
 WITH transaction_times AS (
     SELECT
         trans_created_at,
@@ -84,8 +98,10 @@ SELECT
     AVG(time_to_authorization_seconds) AS avg_time_to_authorization_seconds,
     AVG(time_to_authorization_seconds) / 60 AS avg_time_to_authorization_minutes
 FROM transaction_times;
+```
 
--- QUESTION 8) How many transactions did each user perform by transaction type?
+## QUESTION 8) How many transactions did each user perform by transaction type?
+```sql
 SELECT 
     user_id,
     trans_type_name,
@@ -93,8 +109,10 @@ SELECT
 FROM public_marts.fct_transactions ft 
 GROUP BY user_id, trans_type_name
 ORDER BY user_id, transaction_count DESC
+```
 
--- QUESTION 9) How many sessions were initiated per merchant and what is the average number of steps per session?
+## QUESTION 9) How many sessions were initiated per merchant and what is the average number of steps per session?
+```sql
 WITH session_steps AS (
     SELECT
         session_id,
@@ -111,25 +129,33 @@ SELECT
     AVG(num_steps) AS avg_steps_per_session
 FROM session_steps
 GROUP BY merchant_name;
+```
 
--- QUESTION 10) What is the most used bank in transactions?
+## QUESTION 10) What is the most used bank in transactions?
+```sql
 SELECT 
 	  bank_name 
 	, COUNT(DISTINCT trans_id) AS total_transactions
 FROM public_marts.fct_transactions_sessions fts
 GROUP BY bank_name
 ORDER BY 2 DESC;
+```
 
--- QUESTION 11) What is the average time between each step in a session?
+## QUESTION 11) What is the average time between each step in a session?
+```sql
 SELECT AVG(avg_step_duration_seconds) AS average_time_between_steps
 FROM public_marts.fct_transactions_sessions
+```
 
--- QUESTION 12) How many sessions were completed (containing the AUTHORIZATION step)?
+## QUESTION 12) How many sessions were completed (containing the AUTHORIZATION step)?
+```sql
 SELECT COUNT(DISTINCT session_id) AS completed_sessions
 FROM public_marts.fct_transactions_sessions
 WHERE is_session_complete = 1
+```
 
--- QUESTION 13) What is the most used bank in the LOGIN_ATTEMPT and AUTHORIZATION steps?
+## QUESTION 13) What is the most used bank in the LOGIN_ATTEMPT and AUTHORIZATION steps?
+```sql
 SELECT 
     bank_name,
     step_name,
@@ -138,8 +164,10 @@ FROM public_marts.fct_transactions_sessions
 WHERE step_name IN ('LOGIN_ATTEMPT', 'AUTHORIZATION')
 GROUP BY bank_name, step_name
 ORDER BY 3 DESC
+```
 
--- QUESTION 14) What is the failure rate by bank? Failure are the transactions not completes.
+## QUESTION 14) What is the failure rate by bank? Failure are the transactions not completes.
+```sql
 WITH transaction_status AS (
     SELECT 
         ft.trans_id,
@@ -164,3 +192,4 @@ SELECT
      CAST((failed_transactions::FLOAT / total_transactions) * 100 AS DECIMAL(5,2)) AS failure_rate_percentage
 FROM bank_transactions
 ORDER BY failure_rate_percentage DESC
+```
