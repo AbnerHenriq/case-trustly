@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: stg_sessions
+    description: "Staged session data from the raw sessions table"
+    columns:
+      - name: session_id
+        description: "The unique identifier for the session"
+        tests:
+          - unique
+          - not_null
+
+      - name: step_id
+        description: "The ID of the current step in the session"
+        tests:
+          - not_null
+
+      - name: step_name
+        description: "The name of the current step in the session"
+        tests:
+          - not_null
+
+      - name: bank_name
+        description: "The name of the bank associated with the session"
+        tests:
+          - not_null
+
+      - name: session_created_at
+        description: "The timestamp when the session was created"
+        tests:
+          - not_null
+
+      - name: session_updated_at
+        description: "The timestamp when the session was last updated"
+
+      - name: session_load_created_at
+        description: "The timestamp when the session was loaded into the system"
+        tests:
+          - not_null

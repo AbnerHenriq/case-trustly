@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_transactions_status
+    description: "Staged transaction status data from the raw transaction_status table"
+    columns:
+      - name: trans_status_id
+        description: "The unique identifier for the transaction status"
+        tests:
+          - unique
+          - not_null
+
+      - name: trans_status_name
+        description: "The name of the transaction status"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['pending', 'completed', 'failed', 'cancelled']
+
+      - name: trans_status_description
+        description: "A detailed description of the transaction status"
+
+      - name: created_at
+        description: "The timestamp when the status was created"
+        tests:
+          - not_null
+
+      - name: updated_at
+        description: "The timestamp when the status was last updated"
+
+      - name: load_created_at
+        description: "The timestamp when the status was loaded into the system"
+        tests:
+          - not_null

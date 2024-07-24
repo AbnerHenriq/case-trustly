@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_merchant_type
+    description: "Staged merchant type data from the raw merchant_type table"
+    columns:
+      - name: merchant_type_id
+        description: "The unique identifier for the merchant type"
+        tests:
+          - unique
+          - not_null
+
+      - name: merchant_type_name
+        description: "The name of the merchant type"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['retail', 'online', 'service', 'food_and_beverage']
+
+      - name: merchant_type_description
+        description: "A detailed description of the merchant type"
+
+      - name: created_at
+        description: "The timestamp when the merchant type was created"
+        tests:
+          - not_null
+
+      - name: updated_at
+        description: "The timestamp when the merchant type was last updated"
+
+      - name: load_created_at
+        description: "The timestamp when the merchant type was loaded into the system"
+        tests:
+          - not_null

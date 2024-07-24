@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: stg_merchants
+    description: "Staged merchant data from the raw merchants table"
+    columns:
+      - name: merchant_id
+        description: "The unique identifier for the merchant"
+        tests:
+          - unique
+          - not_null
+
+      - name: merchant_name
+        description: "The name of the merchant"
+        tests:
+          - not_null
+
+      - name: merchant_type_id
+        description: "The ID of the merchant type"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_merchant_type')
+              field: merchant_type_id
+
+      - name: merchant_country
+        description: "The country where the merchant is located"
+        tests:
+          - not_null
+
+      - name: merchant_created_at
+        description: "The timestamp when the merchant was created"
+        tests:
+          - not_null
+
+      - name: merchant_updated_at
+        description: "The timestamp when the merchant was last updated"
+
+      - name: merchant_load_created_at
+        description: "The timestamp when the merchant was loaded into the system"
+        tests:
+          - not_null

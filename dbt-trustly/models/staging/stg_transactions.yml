@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: stg_transactions
+    description: "Staged transaction data from the raw transactions table"
+    columns:
+      - name: trans_id
+        description: "The unique identifier for the transaction"
+        tests:
+          - unique
+          - not_null
+      
+      - name: trans_type_id
+        description: "The ID of the transaction type"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_transactions_type')
+              field: trans_type_id
+
+      - name: trans_status_id
+        description: "The ID of the transaction status"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_transactions_status')
+              field: trans_status_id
+
+      - name: trans_amount
+        description: "The amount of the transaction"
+        tests:
+          - not_null
+
+      - name: merchant_id
+        description: "The ID of the merchant involved in the transaction"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_merchants')
+              field: merchant_id
+
+      - name: user_id
+        description: "The ID of the user who made the transaction"
+        tests:
+          - not_null
+
+      - name: session_id
+        description: "The ID of the session associated with the transaction"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_sessions')
+              field: session_id
+
+      - name: account_number
+        description: "The account number associated with the transaction"
+
+      - name: trans_created_at
+        description: "The timestamp when the transaction was created"
+        tests:
+          - not_null
+
+      - name: trans_updated_at
+        description: "The timestamp when the transaction was last updated"
+
+      - name: trans_load_created_at
+        description: "The timestamp when the transaction was loaded into the system"
+        tests:
+          - not_null
