@@ -15,7 +15,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['retail', 'online', 'service', 'food_and_beverage']
+              values: ['Gaming', 'Casino', 'Test Merchant']
 
       - name: merchant_type_description
         description: "A detailed description of the merchant type"

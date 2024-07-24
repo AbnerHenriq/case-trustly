@@ -15,7 +15,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['deposit', 'withdrawal', 'transfer', 'payment']
+              values: ['PayIn', 'Payout']
 
       - name: trans_type_description
         description: "A detailed description of the transaction type"

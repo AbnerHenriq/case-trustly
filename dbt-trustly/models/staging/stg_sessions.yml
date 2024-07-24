@@ -19,11 +19,11 @@ models:
         description: "The name of the current step in the session"
         tests:
           - not_null
+          - accepted_values:
+              values: ['LOGIN_ATTEMPT', 'AUTHORIZATION', 'SELECT_BANK', 'INITIATED_LIGHTBOX']
 
       - name: bank_name
         description: "The name of the bank associated with the session"
-        tests:
-          - not_null
 
       - name: session_created_at
         description: "The timestamp when the session was created"

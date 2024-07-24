@@ -15,7 +15,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['pending', 'completed', 'failed', 'cancelled']
+              values: ['New', 'Pending', 'Completed', 'Failed']
 
       - name: trans_status_description
         description: "A detailed description of the transaction status"
