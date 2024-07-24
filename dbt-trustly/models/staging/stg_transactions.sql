@@ -7,9 +7,9 @@ SELECT
     user_id,
     session_id,
     account_number,
-    created_at,
-    updated_at,
-    load_created_at
+    created_at AS trans_created_at,
+    updated_at AS trans_updated_at,
+    load_created_at AS trans_load_created_at
 FROM {{ ref('transactions') }}
 
 
