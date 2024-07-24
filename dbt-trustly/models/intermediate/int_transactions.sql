@@ -18,7 +18,7 @@ SELECT
 	-- session
 	, int_sessions.login_attempt_created_datetime
     , int_sessions.authorization_created_datetime
-    , int_sessions.select_bank_created_datetimeˆ
+    , int_sessions.select_bank_created_datetime
     , int_sessions.initiated_lightbox_created_datetime
 	
 FROM {{ ref('stg_transactions') }} as transactions
