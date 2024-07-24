@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: int_sessions
+    description: "Intermediate model for aggregated session data"
+    columns:
+      - name: session_id
+        description: "Unique identifier for the session"
+        tests:
+          - unique
+          - not_null
+
+      - name: login_attempt_created_datetime
+        description: "Timestamp of the login attempt step"
+
+      - name: authorization_created_datetime
+        description: "Timestamp of the authorization step"
+
+      - name: select_bank_created_datetime
+        description: "Timestamp of the bank selection step"
+
+      - name: initiated_lightbox_created_datetime
+        description: "Timestamp of the lightbox initiation step"
+
+      - name: total_steps
+        description: "Total number of distinct steps in the session"
+        tests:
+          - not_null
+
+      - name: has_authorization_step
+        description: "Indicates if the session has an authorization step"
+        tests:
+          - accepted_values:
+              values: [0, 1]
+
+      - name: last_session_updated_at
+        description: "Timestamp of the last session update"
+        tests:
+          - not_null
+
+      - name: first_session_created_at
+        description: "Timestamp of the first session creation"
+        tests:
+          - not_null
+
+      - name: bank_name
+        description: "Name of the bank associated with the session"
+        tests:
+          - not_null
+
+    config:
+      materialized: table
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - session_id

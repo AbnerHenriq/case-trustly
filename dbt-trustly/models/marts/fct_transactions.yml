@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: fct_transactions
+    description: "Fact table containing transaction data"
+    columns:
+      - name: trans_id
+        description: "Unique identifier for the transaction"
+      
+      - name: trans_type_id
+        description: "Type of transaction"
+      
+      - name: trans_status_id
+        description: "Status of the transaction"
+      
+      - name: merchant_id
+        description: "Identifier of the merchant"
+      
+      - name: bank_name
+        description: "Name of the bank associated with the transaction"
+      
+      - name: trans_created_at
+        description: "Timestamp of transaction creation"
+      
+      - name: trans_updated_at
+        description: "Timestamp of transaction update"

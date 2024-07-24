@@ -1,0 +1,88 @@
+version: 2
+
+models:
+  - name: int_transactions
+    description: "Intermediate model for transactions with additional details"
+    columns:
+      - name: trans_id
+        description: "Transaction identifier"
+        tests:
+          - unique
+          - not_null
+
+      - name: merchant_id
+        description: "Merchant identifier"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_merchants')
+              field: merchant_id
+
+      - name: user_id
+        description: "User identifier"
+        tests:
+          - not_null
+
+      - name: session_id
+        description: "Session identifier"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_sessions')
+              field: session_id
+
+      - name: trans_amount
+        description: "Transaction amount"
+        tests:
+          - not_null
+
+      - name: trans_type_name
+        description: "Transaction type name"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['deposit', 'withdrawal', 'transfer', 'payment', 'refund', 'chargeback']
+
+      - name: trans_status_name
+        description: "Transaction status name"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['pending', 'completed', 'failed', 'cancelled', 'processing', 'refunded']
+
+      - name: account_number
+        description: "Account number associated with the transaction"
+
+      - name: trans_created_at
+        description: "Timestamp of transaction creation"
+        tests:
+          - not_null
+
+      - name: trans_updated_at
+        description: "Timestamp of last transaction update"
+
+      - name: trans_load_created_at
+        description: "Timestamp when the transaction was loaded into the system"
+        tests:
+          - not_null
+
+      - name: login_attempt_created_datetime
+        description: "Timestamp of login attempt"
+
+      - name: authorization_created_datetime
+        description: "Timestamp of authorization"
+
+      - name: select_bank_created_datetime
+        description: "Timestamp of bank selection"
+
+      - name: initiated_lightbox_created_datetime
+        description: "Timestamp of lightbox initiation"
+
+    config:
+      materialized: table
+
+    filters:
+      - description: "Exclude merchant_type_id 3 (tests)"
+        column: merchant_type_id
+        operator: "!="
+        value: 3

@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: int_merchants
+    description: "Intermediate model for merchants with additional details"
+    columns:
+      - name: merchant_id
+        description: "Merchant identifier"
+        tests:
+          - unique
+          - not_null
+
+      - name: merchant_type_id
+        description: "Merchant type identifier"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_merchant_type')
+              field: merchant_type_id
+
+      - name: merchant_created_at
+        description: "Timestamp of merchant creation"
+        tests:
+          - not_null
+
+      - name: merchant_updated_at
+        description: "Timestamp of last merchant update"
+
+      - name: merchant_load_created_at
+        description: "Timestamp when the merchant was loaded into the system"
+        tests:
+          - not_null
+
+      - name: merchant_name
+        description: "Name of the merchant"
+        tests:
+          - not_null
+
+      - name: merchant_type_name
+        description: "Name of the merchant type"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['retail', 'online', 'service', 'food_and_beverage', 'marketplace', 'financial_services']
+
+    config:
+      materialized: table
+
+    filters:
+      - description: "Exclude merchant_type_id 3 (tests)"
+        column: merchant_type_id
+        operator: "!="
+        value: 3
