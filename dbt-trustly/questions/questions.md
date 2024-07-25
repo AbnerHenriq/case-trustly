@@ -1,27 +1,27 @@
 
 ##  Question 1) What is the total transaction value and total number of transactions for each merchant?
 ```sql
-select 
-	dm.merchant_name
-	, COUNT(distinct trans_id) as total_transactions
-	, SUM(trans_amount) as total_transactions_value
-from trustly.public_marts.fct_transactions ft
-left join trustly.public_marts.dim_merchants dm 
-	on ft.merchant_id = dm.merchant_id 
-group by 1;
+SELECT 
+	  merchants.merchant_name
+	, COUNT(distinct transactions.trans_id) as total_transactions
+	, SUM(transactions.trans_amount) as total_transactions_value
+FROM public_marts.fct_transactions AS transactions
+LEFT JOIN public_marts.dim_merchants AS merchants
+	on transactions.merchant_id = merchants.merchant_id 
+GROUP BY 1;
 ```
 
 ## Question 2) What is the number of completed, failed, and new transactions for each merchant?
 ```sql
 WITH transaction_status_count AS (
     SELECT
-        m.merchant_id,
-        m.merchant_name,
-        t.trans_status_name,
-        COUNT(t.trans_id) AS transaction_count
-    FROM trustly.public_marts.dim_merchants m
-    LEFT JOIN trustly.public_marts.fct_transactions t ON m.merchant_id = t.merchant_id
-    GROUP BY m.merchant_id, m.merchant_name, t.trans_status_name
+        merchant.merchant_id,
+        merchant.merchant_name,
+        transactions.trans_status_name,
+        COUNT(transactions.trans_id) AS transaction_count
+    FROM public_marts.dim_merchants AS merchant  
+    LEFT JOIN public_marts.fct_transactions AS transactions ON merchant.merchant_id = transactions.merchant_id
+    GROUP BY merchant.merchant_id, merchant.merchant_name, transactions.trans_status_name
 )
 SELECT
     merchant_id,
@@ -38,7 +38,6 @@ ORDER BY merchant_id;
 ##  Question 3) What is the average transaction value for each transaction type (PayIn and Payout)?
 ```sql
 SELECT
-SELECT
     trans_type_name,
     AVG(trans_amount) AS avg_transaction_value
 FROM trustly.public_marts.fct_transactions
@@ -49,13 +48,13 @@ GROUP BY trans_type_name;
 ```sql
 WITH transaction_counts AS (
     SELECT
-        m.merchant_id,
-        m.merchant_name,
+        merchant.merchant_id,
+        merchant.merchant_name,
         COUNT(*) AS total_transactions,
-        SUM(CASE WHEN t.trans_status_name = 'Failed' THEN 1 ELSE 0 END) AS failed_transactions
-    FROM trustly.public_marts.dim_merchants m
-    LEFT JOIN trustly.public_marts.fct_transactions t ON m.merchant_id = t.merchant_id
-    GROUP BY m.merchant_id, m.merchant_name
+        SUM(CASE WHEN transactions.trans_status_name = 'Failed' THEN 1 ELSE 0 END) AS failed_transactions
+    FROM public_marts.dim_merchants AS merchant
+    LEFT JOIN public_marts.fct_transactions AS transactions ON merchant.merchant_id = transactions.merchant_id
+    GROUP BY merchant.merchant_id, merchant.merchant_name
 )
 SELECT
     merchant_id,
@@ -70,7 +69,7 @@ ORDER BY failed_percentage desc
 SELECT 
     user_id,
     SUM(trans_amount) AS total_transaction_value
-FROM public_marts.fct_transactions ft 
+FROM public_marts.fct_transactions AS transactions
 GROUP BY user_id
 ORDER BY total_transaction_value DESC
 ```
@@ -81,7 +80,7 @@ SELECT
     COUNT(*) AS total_transactions,
     SUM(CASE WHEN trans_status_name = 'Completed' THEN 1 ELSE 0 END) AS completed_transactions,
     SUM(CASE WHEN trans_status_name = 'New' THEN 1 ELSE 0 END) AS initiated_transactions
-FROM public_marts.fct_transactions ft;
+FROM public_marts.fct_transactions AS transactions;
 ```
 
 ## Question 7) What is the average time between the creation and authorization request of transactions?
@@ -91,7 +90,7 @@ WITH transaction_times AS (
         trans_created_at,
         authorization_created_datetime,
         EXTRACT(EPOCH FROM (authorization_created_datetime - trans_created_at)) AS time_to_authorization_seconds
-    FROM public_marts.fct_transactions ft
+    FROM public_marts.fct_transactions AS transactions
     WHERE authorization_created_datetime IS NOT NULL
 )
 SELECT
@@ -106,7 +105,7 @@ SELECT
     user_id,
     trans_type_name,
     COUNT(*) AS transaction_count
-FROM public_marts.fct_transactions ft 
+FROM public_marts.fct_transactions AS transactions
 GROUP BY user_id, trans_type_name
 ORDER BY user_id, transaction_count DESC
 ```
@@ -118,9 +117,9 @@ WITH session_steps AS (
         session_id,
         merchant_name,
         COUNT(DISTINCT step_id) AS num_steps
-    FROM public_marts.fct_transactions_sessions trans_sessions
-    left join public_marts.dim_merchants dm
-    	on dm.merchant_id = trans_sessions.merchant_id
+    FROM public_marts.fct_transactions_sessions AS transactions_sessions
+    LEFT JOIN public_marts.dim_merchants AS merchants
+    	on merchants.merchant_id = transactions_sessions.merchant_id
     GROUP BY session_id, merchant_name
 )
 SELECT
@@ -134,54 +133,88 @@ GROUP BY merchant_name;
 ## Question 10) What is the most used bank in transactions?
 ```sql
 SELECT 
-	  bank_name 
-	, COUNT(DISTINCT trans_id) AS total_transactions
-FROM public_marts.fct_transactions_sessions fts
+    bank_name,
+    COUNT(*) as transaction_count
+FROM public_marts.fct_transactions AS transactions
+WHERE bank_name IS NOT NULL
 GROUP BY bank_name
-ORDER BY 2 DESC;
+ORDER BY transaction_count DESC
+LIMIT 1;
 ```
 
 ## Question 11) What is the average time between each step in a session?
 ```sql
-SELECT AVG(avg_step_duration_seconds) AS average_time_between_steps
-FROM public_marts.fct_transactions_sessions
+WITH step_times AS (
+  SELECT
+    session_id,
+    login_attempt_created_datetime,
+    authorization_created_datetime,
+    select_bank_created_datetime,
+    initiated_lightbox_created_datetime
+  FROM public_marts.fct_transactions AS transactions
+  WHERE session_id IS NOT NULL
+),
+time_differences AS (
+  SELECT
+    session_id,
+    EXTRACT(EPOCH FROM (authorization_created_datetime - login_attempt_created_datetime)) AS login_to_auth,
+    EXTRACT(EPOCH FROM (select_bank_created_datetime - authorization_created_datetime)) AS auth_to_select_bank,
+    EXTRACT(EPOCH FROM (initiated_lightbox_created_datetime - select_bank_created_datetime)) AS select_bank_to_lightbox
+  FROM step_times
+  WHERE 
+    login_attempt_created_datetime IS NOT NULL
+    AND authorization_created_datetime IS NOT NULL
+    AND select_bank_created_datetime IS NOT NULL
+    AND initiated_lightbox_created_datetime IS NOT NULL
+)
+SELECT
+  AVG(login_to_auth) AS avg_login_to_auth_seconds,
+  AVG(auth_to_select_bank) AS avg_auth_to_select_bank_seconds,
+  AVG(select_bank_to_lightbox) AS avg_select_bank_to_lightbox_seconds
+FROM time_differences
 ```
 
 ## Question 12) How many sessions were completed (containing the AUTHORIZATION step)?
 ```sql
-SELECT COUNT(DISTINCT session_id) AS completed_sessions
-FROM public_marts.fct_transactions_sessions
-WHERE is_session_complete = 1
+SELECT 
+    COUNT(DISTINCT session_id) AS completed_sessions
+FROM public_marts.fct_transactions AS transactions
+WHERE is_session_complete = 1;
 ```
 
 ## Question 13) What is the most used bank in the LOGIN_ATTEMPT and AUTHORIZATION steps?
 ```sql
+WITH login_attempts AS (
+    SELECT bank_name, COUNT(*) AS login_count
+    FROM public_marts.fct_transactions
+    WHERE login_attempt_created_datetime IS NOT NULL
+    GROUP BY bank_name
+),
+authorizations AS (
+    SELECT bank_name, COUNT(*) AS auth_count
+    FROM public_marts.fct_transactions
+    WHERE authorization_created_datetime IS NOT NULL
+    GROUP BY bank_name
+)
 SELECT 
-    bank_name,
-    step_name,
-	COUNT(bank_name) AS usage_bank_count
-FROM public_marts.fct_transactions_sessions
-WHERE step_name IN ('LOGIN_ATTEMPT', 'AUTHORIZATION')
-GROUP BY bank_name, step_name
-ORDER BY 3 DESC
+    COALESCE(login_attempts.bank_name, authorizations.bank_name) AS bank_name,
+    COALESCE(login_attempts.login_count, 0) AS login_attempts,
+    COALESCE(authorizations.auth_count, 0) AS authorizations,
+    COALESCE(login_attempts.login_count, 0) + COALESCE(authorizations.auth_count, 0) AS total_count
+FROM login_attempts
+FULL OUTER JOIN authorizations ON login_attempts.bank_name = authorizations.bank_name
+ORDER BY total_count DESC
+LIMIT 10
 ```
 
 ## Question 14) What is the failure rate by bank? Failure are the transactions not completes.
 ```sql
-WITH transaction_status AS (
-    SELECT 
-        ft.trans_id,
-        ft.trans_status_name,
-        fts.bank_name
-    FROM public_marts.fct_transactions ft
-    JOIN public_marts.fct_transactions_sessions fts ON ft.trans_id = fts.trans_id
-)
-, bank_transactions AS (
+WITH bank_transactions AS (
     SELECT 
         bank_name,
         COUNT(*) AS total_transactions,
         SUM(CASE WHEN trans_status_name != 'Completed' THEN 1 ELSE 0 END) AS failed_transactions
-    FROM transaction_status
+    FROM public_marts.fct_transactions
     WHERE bank_name IS NOT NULL
     GROUP BY bank_name
 )
@@ -189,7 +222,7 @@ SELECT
     bank_name,
     total_transactions,
     failed_transactions,
-     CAST((failed_transactions::FLOAT / total_transactions) * 100 AS DECIMAL(5,2)) AS failure_rate_percentage
+    CAST(ROUND(CAST(failed_transactions AS NUMERIC) / CAST(total_transactions AS NUMERIC) * 100, 2) AS NUMERIC(5,2)) AS failure_rate_percentage
 FROM bank_transactions
-ORDER BY failure_rate_percentage DESC
+ORDER BY failure_rate_percentage DESC;
 ```
