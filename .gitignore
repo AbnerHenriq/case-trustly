@@ -15,3 +15,6 @@ dbt-trustly/package-lock.yml
 dbt-trustly/packages.yml
 trustly-env/lib/python3.12/site-packages/dbt/__pycache__/__init__.cpython-312.pyc
 trustly-env/lib/python3.12/site-packages/dbt/__pycache__/__init__.cpython-312.pyc
+logs/dbt.log
+trustly-env/lib/python3.12/site-packages/dbt/__pycache__/__init__.cpython-312.pyc
+
