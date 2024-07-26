@@ -3,11 +3,11 @@
 ```sql
 SELECT 
 	  merchants.merchant_name
-	, COUNT(distinct transactions.trans_id) as total_transactions
-	, SUM(transactions.trans_amount) as total_transactions_value
+	, COUNT(distinct transactions.trans_id) AS total_transactions
+	, SUM(transactions.trans_amount) AS total_transactions_value
 FROM public_marts.fct_transactions AS transactions
 LEFT JOIN public_marts.dim_merchants AS merchants
-	on transactions.merchant_id = merchants.merchant_id 
+	ON transactions.merchant_id = merchants.merchant_id 
 GROUP BY 1;
 ```
 
