@@ -113,24 +113,19 @@ ORDER BY user_id, transaction_count DESC
 ```
 
 ## Question 9) How many sessions were initiated per merchant and what is the average number of steps per session?
+
+-- Removed sessions_id = 0, not being considered as a iniciated session.
+-- To the second part, it was considered average number of steps, per sessions, per merchant.
 ```sql
-WITH session_steps AS (
-    SELECT
-        session_id,
-        merchant_name,
-        COUNT(DISTINCT step_id) AS num_steps
-    FROM public_marts.fct_transactions_sessions AS transactions_sessions
-    LEFT JOIN public_marts.dim_merchants AS merchants
-    	on merchants.merchant_id = transactions_sessions.merchant_id
-    GROUP BY session_id, merchant_name
-)
-SELECT
-    merchant_name,
-    COUNT(DISTINCT session_id) AS total_sessions,
-    AVG(num_steps) AS avg_steps_per_session
-FROM session_steps
-GROUP BY merchant_name;
+SELECT 
+	  merchant_id
+	, COUNT(DISTINCT session_id) AS tt_sessions
+	, AVG(total_steps) AS avg_steps_per_session
+FROM public_marts.fct_transactions ft
+WHERE session_id <> 0
+GROUP BY 1;
 ```
+ 
 
 ## Question 10) What is the most used bank in transactions?
 ```sql
