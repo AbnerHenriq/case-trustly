@@ -1,7 +1,5 @@
 # Trustly Case
 
-Project GitHub -> [link](https://github.com/AbnerHenriq/case-trustly/tree/main) 
-
 ## Stack:
 
 Transformation: dbt
@@ -28,6 +26,7 @@ The final models are `fct_transactions` and `dim_merchants` used to create all q
     - Added custom tests to capture errors that could impact the architecture:
         - Checked for transactions with more than one session
         - Verified if a session has more than one bank
+        - Verified if there are merchants with the name "Test"
 
 ![Data Quality](data_quality.png)
 
@@ -50,10 +49,10 @@ Answer: If only orchestrating SQL is needed, dbtCloud could be used in the pipel
 
 I see the need for some answers before suggesting a solution.
 Firstly, I would try to understand if:
-1. Is it possible to have a transaction in a merchant's base that has not yet been loaded?
+1. Is it possible to have a transaction with a merchant_id that wasnt loaded in merchant table yet?
 2. What is the average time for this transaction to be linked to the merchant after loading?
 
-With the query below, we can better understand the ingestion behavior of the base.
+With the query below, we can better understand the ingestion behavior of the data.
 ```sql
 SELECT 
 	t.merchant_id
@@ -68,7 +67,7 @@ GROUP BY 1, 2
 ORDER BY diff_hours ASC
 ```
 
-We cannot have a merchant base being updated D-1 or with high frequency, since transactions can be assigned up to 4 hours after the merchant load. 
+We cannot have a merchant table being updated D-1 or with high frequency, since transactions can be assigned up to 4 hours after the merchant load. 
 
 Some options:
 1. Study ways to update the merchant base more frequently
@@ -124,7 +123,7 @@ Question: You need to ensure the quality of the data being processed and stored.
     - Ensure that stakeholders impacted by routine failures are aware before using the data
     
 3. Data Reconciliation:
-    - Access and ready queries to validate between the datalake and the production/replica base, to verify data correctness
+    - Access and ready queries to validate between the datalake and the production/replica database, to verify data correctness
 
 4. Data Handling
     - Handling null and inconsistent data
@@ -158,7 +157,7 @@ Question: You need to ensure the quality of the data being processed and stored.
             - Questions usage
             - Top dashboards
             - Unused Dashboards
-            - Unused Explorer
+            - Unused Datasets
             - Slow queries
 
 8. Stakeholder Management and Feedback
