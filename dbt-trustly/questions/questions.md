@@ -3,7 +3,7 @@
 ```sql
 SELECT 
 	  merchants.merchant_name
-	, COUNT(distinct transactions.trans_id) AS total_transactions
+	, COUNT(DISTINCT transactions.trans_id) AS total_transactions
 	, SUM(transactions.trans_amount) AS total_transactions_value
 FROM public_marts.fct_transactions AS transactions
 LEFT JOIN public_marts.dim_merchants AS merchants
