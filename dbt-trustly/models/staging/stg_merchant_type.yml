@@ -2,33 +2,33 @@ version: 2
 
 models:
   - name: stg_merchant_type
-    description: "Staged merchant type data from the raw merchant_type table"
+    description: '{{ doc("stg_merchant_type") }}'
     columns:
       - name: merchant_type_id
-        description: "The unique identifier for the merchant type"
+        description: '{{ doc("stg_merchant_type__merchant_type_id") }}'
         tests:
           - unique
           - not_null
 
       - name: merchant_type_name
-        description: "The name of the merchant type"
+        description: '{{ doc("stg_merchant_type__merchant_type_name") }}'
         tests:
           - not_null
           - accepted_values:
               values: ['Gaming', 'Casino', 'Test Merchant']
 
       - name: merchant_type_description
-        description: "A detailed description of the merchant type"
+        description: '{{ doc("stg_merchant_type__merchant_type_description") }}'
 
       - name: created_at
-        description: "The timestamp when the merchant type was created"
+        description: '{{ doc("stg_merchant_type__created_at") }}'
         tests:
           - not_null
 
       - name: updated_at
-        description: "The timestamp when the merchant type was last updated"
+        description: '{{ doc("stg_merchant_type__updated_at") }}'
 
       - name: load_created_at
-        description: "The timestamp when the merchant type was loaded into the system"
+        description: '{{ doc("stg_merchant_type__load_created_at") }}'
         tests:
           - not_null

@@ -2,38 +2,38 @@ version: 2
 
 models:
   - name: stg_sessions
-    description: "Staged session data from the raw sessions table"
+    description: '{{ doc("stg_sessions") }}'
     columns:
       - name: session_id
-        description: "The unique identifier for the session"
+        description: '{{ doc("stg_sessions__session_id") }}'
         tests:
           - unique
           - not_null
 
       - name: step_id
-        description: "The ID of the current step in the session"
+        description: '{{ doc("stg_sessions__step_id") }}'
         tests:
           - not_null
 
       - name: step_name
-        description: "The name of the current step in the session"
+        description: '{{ doc("stg_sessions__step_name") }}'
         tests:
           - not_null
           - accepted_values:
               values: ['LOGIN_ATTEMPT', 'AUTHORIZATION', 'SELECT_BANK', 'INITIATED_LIGHTBOX']
 
       - name: bank_name
-        description: "The name of the bank associated with the session"
+        description: '{{ doc("stg_sessions__bank_name") }}'
 
       - name: session_created_at
-        description: "The timestamp when the session was created"
+        description: '{{ doc("stg_sessions__session_created_at") }}'
         tests:
           - not_null
 
       - name: session_updated_at
-        description: "The timestamp when the session was last updated"
+        description: '{{ doc("stg_sessions__session_updated_at") }}'
 
       - name: session_load_created_at
-        description: "The timestamp when the session was loaded into the system"
+        description: '{{ doc("stg_sessions__session_load_created_at") }}'
         tests:
           - not_null

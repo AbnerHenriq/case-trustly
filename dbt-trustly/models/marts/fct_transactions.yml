@@ -2,25 +2,79 @@ version: 2
 
 models:
   - name: fct_transactions
-    description: "Fact table containing transaction data"
+    description: "Fact model for transactions with additional details. Transaction with fake merchants are being deleted."
     columns:
       - name: trans_id
-        description: "Unique identifier for the transaction"
-      
-      - name: trans_type_id
-        description: "Type of transaction"
-      
-      - name: trans_status_id
-        description: "Status of the transaction"
-      
+        description:  '{{ doc("stg_transactions__trans_id") }}'
+        tests:
+          - unique
+          - not_null
+
       - name: merchant_id
-        description: "Identifier of the merchant"
-      
-      - name: bank_name
-        description: "Name of the bank associated with the transaction"
-      
+        description: '{{ doc("stg_transactions__merchant_id") }}'
+    
+      - name: user_id
+        description: '{{ doc("stg_transactions__user_id") }}'
+
+      - name: session_id
+        description: '{{ doc("stg_transactions__session_id") }}'
+
+      - name: trans_amount
+        description: '{{ doc("stg_transactions__trans_amount") }}'
+        tests:
+          - not_null
+
+      - name: trans_type_name
+        description: '{{ doc("stg_transactions_type__trans_type_name") }}'
+        tests:
+          - not_null
+
+      - name: trans_status_name
+        description: '{{ doc("stg_transactions_status__trans_status_name") }}'
+        tests:
+          - not_null
+
+      - name: account_number
+        description: '{{ doc("stg_transactions__account_number") }}'
+
       - name: trans_created_at
-        description: "Timestamp of transaction creation"
-      
+        description: '{{ doc("stg_transactions__trans_created_at") }}'
+        tests:
+          - not_null
+
       - name: trans_updated_at
-        description: "Timestamp of transaction update"
+        description: '{{ doc("stg_transactions__trans_updated_at") }}'
+
+      - name: trans_load_created_at
+        description: '{{ doc("stg_transactions__trans_load_created_at") }}'
+        tests:
+          - not_null
+
+      - name: bank_name
+        description: Name of the bank
+        tests:
+          - not_null
+
+      - name: login_attempt_created_datetime
+        description: "Timestamp of login attempt"
+
+      - name: authorization_created_datetime
+        description: "Timestamp of authorization"
+
+      - name: select_bank_created_datetime
+        description: "Timestamp of bank selection"
+
+      - name: initiated_lightbox_created_datetime
+        description: "Timestamp of lightbox initiation"
+
+      - name: total_steps
+        description: "Total number of steps in the session"
+
+      - name: session_duration_seconds
+        description: "Duration of the session in seconds"
+
+      - name: session_start_datetime
+        description: "Timestamp of the start of the session"
+
+      - name: session_end_datetime
+        description: "Timestamp of the end of the session"

@@ -2,33 +2,33 @@ version: 2
 
 models:
   - name: stg_transactions_status
-    description: "Staged transaction status data from the raw transaction_status table"
+    description: '{{ doc("stg_transactions_status") }}'
     columns:
       - name: trans_status_id
-        description: "The unique identifier for the transaction status"
+        description: '{{ doc("stg_transactions_status__trans_status_id") }}'
         tests:
           - unique
           - not_null
 
       - name: trans_status_name
-        description: "The name of the transaction status"
+        description: '{{ doc("stg_transactions_status__trans_status_name") }}'
         tests:
           - not_null
           - accepted_values:
               values: ['New', 'Pending', 'Completed', 'Failed']
 
       - name: trans_status_description
-        description: "A detailed description of the transaction status"
+        description: '{{ doc("stg_transactions_status__trans_status_description") }}'
 
       - name: created_at
-        description: "The timestamp when the status was created"
+        description: '{{ doc("stg_transactions_status__created_at") }}'
         tests:
           - not_null
 
       - name: updated_at
-        description: "The timestamp when the status was last updated"
+        description: '{{ doc("stg_transactions_status__updated_at") }}'
 
       - name: load_created_at
-        description: "The timestamp when the status was loaded into the system"
+        description: '{{ doc("stg_transactions_status__load_created_at") }}'
         tests:
           - not_null

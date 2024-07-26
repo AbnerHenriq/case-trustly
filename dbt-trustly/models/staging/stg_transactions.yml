@@ -2,16 +2,16 @@ version: 2
 
 models:
   - name: stg_transactions
-    description: "Staged transaction data from the raw transactions table"
+    description: '{{ doc("stg_transactions") }}'
     columns:
       - name: trans_id
-        description: "The unique identifier for the transaction"
+        description: '{{ doc("stg_transactions__trans_id") }}'
         tests:
           - unique
           - not_null
       
       - name: trans_type_id
-        description: "The ID of the transaction type"
+        description: '{{ doc("stg_transactions__trans_type_id") }}'
         tests:
           - not_null
           - relationships:
@@ -19,7 +19,7 @@ models:
               field: trans_type_id
 
       - name: trans_status_id
-        description: "The ID of the transaction status"
+        description: '{{ doc("stg_transactions__trans_status_id") }}'
         tests:
           - not_null
           - relationships:
@@ -27,12 +27,12 @@ models:
               field: trans_status_id
 
       - name: trans_amount
-        description: "The amount of the transaction"
+        description: '{{ doc("stg_transactions__trans_amount") }}'
         tests:
           - not_null
 
       - name: merchant_id
-        description: "The ID of the merchant involved in the transaction"
+        description: '{{ doc("stg_transactions__merchant_id") }}'
         tests:
           - not_null
           - relationships:
@@ -40,12 +40,12 @@ models:
               field: merchant_id
 
       - name: user_id
-        description: "The ID of the user who made the transaction"
+        description: '{{ doc("stg_transactions__user_id") }}'
         tests:
           - not_null
 
       - name: session_id
-        description: "The ID of the session associated with the transaction"
+        description: '{{ doc("stg_transactions__session_id") }}'
         tests:
           - not_null
           - relationships:
@@ -53,17 +53,17 @@ models:
               field: session_id
 
       - name: account_number
-        description: "The account number associated with the transaction"
+        description: '{{ doc("stg_transactions__account_number") }}'
 
       - name: trans_created_at
-        description: "The timestamp when the transaction was created"
+        description: '{{ doc("stg_transactions__trans_created_at") }}'
         tests:
           - not_null
 
       - name: trans_updated_at
-        description: "The timestamp when the transaction was last updated"
+        description: '{{ doc("stg_transactions__trans_updated_at") }}'
 
       - name: trans_load_created_at
-        description: "The timestamp when the transaction was loaded into the system"
+        description: '{{ doc("stg_transactions__trans_load_created_at") }}'
         tests:
           - not_null

@@ -2,21 +2,21 @@ version: 2
 
 models:
   - name: stg_merchants
-    description: "Staged merchant data from the raw merchants table"
+    description: '{{ doc("stg_merchants") }}'
     columns:
       - name: merchant_id
-        description: "The unique identifier for the merchant"
+        description: '{{ doc("stg_merchants__merchant_id") }}'
         tests:
           - unique
           - not_null
 
       - name: merchant_name
-        description: "The name of the merchant"
+        description: '{{ doc("stg_merchants__merchant_name") }}'
         tests:
           - not_null
 
       - name: merchant_type_id
-        description: "The ID of the merchant type"
+        description: '{{ doc("stg_merchants__merchant_type_id") }}'
         tests:
           - not_null
           - relationships:
@@ -24,19 +24,21 @@ models:
               field: merchant_type_id
 
       - name: merchant_country
-        description: "The country where the merchant is located"
+        description: '{{ doc("stg_merchants__merchant_country") }}'
         tests:
           - not_null
+          - accepted_values:
+              values: ['United States', 'United Kingdom', 'Germany', 'France', 'Brazil']
 
       - name: merchant_created_at
-        description: "The timestamp when the merchant was created"
+        description: '{{ doc("stg_merchants__merchant_created_at") }}'
         tests:
           - not_null
 
       - name: merchant_updated_at
-        description: "The timestamp when the merchant was last updated"
+        description: '{{ doc("stg_merchants__merchant_updated_at") }}'
 
       - name: merchant_load_created_at
-        description: "The timestamp when the merchant was loaded into the system"
+        description: '{{ doc("stg_merchants__merchant_load_created_at") }}'
         tests:
           - not_null

@@ -2,16 +2,16 @@ version: 2
 
 models:
   - name: int_transactions
-    description: "Intermediate model for transactions with additional details"
+    description: "Intermediate model for transactions with additional details. Transaction with fake merchants are being deleted."
     columns:
       - name: trans_id
-        description: "Transaction identifier"
+        description:  '{{ doc("stg_transactions__trans_id") }}'
         tests:
           - unique
           - not_null
 
       - name: merchant_id
-        description: "Merchant identifier"
+        description: '{{ doc("stg_transactions__merchant_id") }}'
         tests:
           - not_null
           - relationships:
@@ -19,12 +19,12 @@ models:
               field: merchant_id
 
       - name: user_id
-        description: "User identifier"
+        description: '{{ doc("stg_transactions__user_id") }}'
         tests:
           - not_null
 
       - name: session_id
-        description: "Session identifier"
+        description: '{{ doc("stg_transactions__session_id") }}'
         tests:
           - not_null
           - relationships:
@@ -32,39 +32,38 @@ models:
               field: session_id
 
       - name: trans_amount
-        description: "Transaction amount"
+        description: '{{ doc("stg_transactions__trans_amount") }}'
         tests:
           - not_null
 
       - name: trans_type_name
-        description: "Transaction type name"
+        description: '{{ doc("stg_transactions_type__trans_type_name") }}'
         tests:
           - not_null
-          - accepted_values:
-              values: ['deposit', 'withdrawal', 'transfer', 'payment', 'refund', 'chargeback']
 
       - name: trans_status_name
-        description: "Transaction status name"
+        description: '{{ doc("stg_transactions_status__trans_status_name") }}'
         tests:
           - not_null
-          - accepted_values:
-              values: ['pending', 'completed', 'failed', 'cancelled', 'processing', 'refunded']
 
       - name: account_number
-        description: "Account number associated with the transaction"
+        description: '{{ doc("stg_transactions__account_number") }}'
 
       - name: trans_created_at
-        description: "Timestamp of transaction creation"
+        description: '{{ doc("stg_transactions__trans_created_at") }}'
         tests:
           - not_null
 
       - name: trans_updated_at
-        description: "Timestamp of last transaction update"
+        description: '{{ doc("stg_transactions__trans_updated_at") }}'
 
       - name: trans_load_created_at
-        description: "Timestamp when the transaction was loaded into the system"
+        description: '{{ doc("stg_transactions__trans_load_created_at") }}'
         tests:
           - not_null
+
+      - name: bank_name
+        description: Name of the bank
 
       - name: login_attempt_created_datetime
         description: "Timestamp of login attempt"
@@ -78,11 +77,14 @@ models:
       - name: initiated_lightbox_created_datetime
         description: "Timestamp of lightbox initiation"
 
-    config:
-      materialized: table
+      - name: total_steps
+        description: "Total number of steps in the session"
 
-    filters:
-      - description: "Exclude merchant_type_id 3 (tests)"
-        column: merchant_type_id
-        operator: "!="
-        value: 3
+      - name: session_duration_seconds
+        description: "Duration of the session in seconds"
+
+      - name: session_start_datetime
+        description: "Timestamp of the start of the session"
+
+      - name: session_end_datetime
+        description: "Timestamp of the end of the session"

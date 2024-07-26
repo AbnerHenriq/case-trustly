@@ -2,10 +2,10 @@ version: 2
 
 models:
   - name: int_merchants
-    description: "Intermediate model for merchants with additional details"
+    description: "Intermediate model for merchants with additional details. Merchant's used for tests are being excluded."
     columns:
       - name: merchant_id
-        description: "Merchant identifier"
+        description: '{{ doc("stg_merchants__merchant_id") }}'
         tests:
           - unique
           - not_null
@@ -19,22 +19,24 @@ models:
               field: merchant_type_id
 
       - name: merchant_created_at
-        description: "Timestamp of merchant creation"
+        description: '{{ doc("stg_merchants__merchant_created_at") }}'
         tests:
           - not_null
 
       - name: merchant_updated_at
-        description: "Timestamp of last merchant update"
+        description: '{{ doc("stg_merchants__merchant_updated_at") }}'
 
       - name: merchant_load_created_at
-        description: "Timestamp when the merchant was loaded into the system"
+        description: '{{ doc("stg_merchants__merchant_load_created_at") }}'
         tests:
           - not_null
 
       - name: merchant_name
-        description: "Name of the merchant"
+        description: '{{ doc("stg_merchants__merchant_name") }}'
         tests:
           - not_null
 
       - name: merchant_type_name
-        description: "Name of the merchant type"
+        description: '{{ doc("stg_merchant_type__merchant_type_name") }}'
+        tests: 
+          - not_null

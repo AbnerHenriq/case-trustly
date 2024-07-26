@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: dim_merchants
+    description: "Dimension model for merchants with additional details. Merchant's used for tests are being excluded."
+    columns:
+      - name: merchant_id
+        description: '{{ doc("stg_merchants__merchant_id") }}'
+        tests:
+          - unique
+          - not_null
+
+      - name: merchant_type_id
+        description: '{{ doc("stg_merchant_type__merchant_type_id") }}'
+        tests:
+          - not_null
+
+      - name: merchant_created_at
+        description: '{{ doc("stg_merchants__merchant_created_at") }}'
+        tests:
+          - not_null
+
+      - name: merchant_updated_at
+        description: '{{ doc("stg_merchants__merchant_updated_at") }}'
+
+      - name: merchant_load_created_at
+        description: '{{ doc("stg_merchants__merchant_load_created_at") }}'
+        tests:
+          - not_null
+
+      - name: merchant_name
+        description: '{{ doc("stg_merchants__merchant_name") }}'
+        tests:
+          - not_null
+
+      - name: merchant_type_name
+        description: '{{ doc("stg_merchant_type__merchant_type_name") }}'
+        tests: 
+          - not_null
