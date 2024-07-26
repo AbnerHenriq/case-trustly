@@ -27,8 +27,8 @@ models:
         tests:
           - not_null
 
-      - name: has_authorization_step
-        description: "Indicates if the session has an authorization step"
+      - name: is_sessions_complete
+        description: "Indicates if the session has AUTHORIZATION step"
         tests:
           - accepted_values:
               values: [0, 1]

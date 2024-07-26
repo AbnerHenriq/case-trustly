@@ -78,3 +78,19 @@ models:
 
       - name: session_end_datetime
         description: "Timestamp of the end of the session"
+
+      - name: is_sessions_complete
+        description: "Indicates if the session has AUTHORIZATION step"
+        tests:
+          - accepted_values:
+              values: [0, 1]
+
+      - name: last_session_updated_at
+        description: "Timestamp of the last session update"
+        tests:
+          - not_null
+
+      - name: first_session_created_at
+        description: "Timestamp of the first session creation"
+        tests:
+          - not_null
