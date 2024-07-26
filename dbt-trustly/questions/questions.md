@@ -75,11 +75,13 @@ ORDER BY total_transaction_value DESC
 ```
 
 ## Question 6) How many transactions were initiated and how many were completed?
+
+- Considered initiated transactions as transactions with status 'New', 'Pending', or 'Failed'
 ```sql
 SELECT 
     COUNT(*) AS total_transactions,
     SUM(CASE WHEN trans_status_name = 'Completed' THEN 1 ELSE 0 END) AS completed_transactions,
-    SUM(CASE WHEN trans_status_name = 'New' THEN 1 ELSE 0 END) AS initiated_transactions
+    SUM(CASE WHEN trans_status_name IN ('New', 'Pending', 'Failed') THEN 1 ELSE 0 END) AS initiated_transactions
 FROM public_marts.fct_transactions AS transactions;
 ```
 
@@ -147,31 +149,32 @@ LIMIT 1;
 WITH step_times AS (
   SELECT
     session_id,
-    login_attempt_created_datetime,
-    authorization_created_datetime,
+    initiated_lightbox_created_datetime,
     select_bank_created_datetime,
-    initiated_lightbox_created_datetime
+    login_attempt_created_datetime,
+    authorization_created_datetime
   FROM public_marts.fct_transactions AS transactions
   WHERE session_id IS NOT NULL
+        AND session_id <> 0
 ),
 time_differences AS (
   SELECT
     session_id,
-    EXTRACT(EPOCH FROM (authorization_created_datetime - login_attempt_created_datetime)) AS login_to_auth,
-    EXTRACT(EPOCH FROM (select_bank_created_datetime - authorization_created_datetime)) AS auth_to_select_bank,
-    EXTRACT(EPOCH FROM (initiated_lightbox_created_datetime - select_bank_created_datetime)) AS select_bank_to_lightbox
+    EXTRACT(EPOCH FROM (select_bank_created_datetime - initiated_lightbox_created_datetime)) / 60 AS lightbox_to_select_bank,
+    EXTRACT(EPOCH FROM (login_attempt_created_datetime - select_bank_created_datetime)) / 60 AS select_bank_to_login,
+    EXTRACT(EPOCH FROM (authorization_created_datetime - login_attempt_created_datetime)) / 60 AS login_to_auth
   FROM step_times
   WHERE 
-    login_attempt_created_datetime IS NOT NULL
-    AND authorization_created_datetime IS NOT NULL
+    initiated_lightbox_created_datetime IS NOT NULL
     AND select_bank_created_datetime IS NOT NULL
-    AND initiated_lightbox_created_datetime IS NOT NULL
+    AND login_attempt_created_datetime IS NOT NULL
+    AND authorization_created_datetime IS NOT NULL
 )
 SELECT
-  AVG(login_to_auth) AS avg_login_to_auth_seconds,
-  AVG(auth_to_select_bank) AS avg_auth_to_select_bank_seconds,
-  AVG(select_bank_to_lightbox) AS avg_select_bank_to_lightbox_seconds
-FROM time_differences
+  AVG(lightbox_to_select_bank) AS avg_lightbox_to_select_bank_minutes,
+  AVG(select_bank_to_login) AS avg_select_bank_to_login_minutes,
+  AVG(login_to_auth) AS avg_login_to_auth_minutes
+FROM time_differences;
 ```
 
 ## Question 12) How many sessions were completed (containing the AUTHORIZATION step)?
